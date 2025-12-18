@@ -99,4 +99,25 @@ public class CustomerServiceIMPL implements CustomerService {
             throw new RuntimeException("No customer for that id");
         }
     }
+
+    @Override
+    public List<CustomerDto> getAllCustomersByActiveState(boolean activeState) {
+        List<Customer> getAllCustomers = customerRepo.findAllByActiveEquals(activeState);
+        List<CustomerDto> customerDtoList = new ArrayList<>();
+
+        for (Customer customer : getAllCustomers){
+            CustomerDto customerDto = new CustomerDto(
+                    customer.getCustomerId(),
+                    customer.getCustomerName(),
+                    customer.getCustomerAddress(),
+                    customer.getCustomerSalary(),
+                    customer.getContactNumber(),
+                    customer.getNic(),
+                    customer.isActive()
+            );
+            customerDtoList.add(customerDto);
+        }
+
+        return customerDtoList;
+    }
 }

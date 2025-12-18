@@ -49,4 +49,10 @@ public class CustomerController {
         return message;
     }
 
+    @GetMapping("/{status}")
+    public List<CustomerDto> getAllCustomersByActiveState(@PathVariable(value = "status") boolean activeState){
+        List<CustomerDto> allCustomers = customerService.getAllCustomersByActiveState(activeState);
+        return allCustomers;
+    }
+
 }
