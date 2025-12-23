@@ -1,9 +1,11 @@
 package com.springbootacademy.point_of_sales.service.impl;
 
+import com.springbootacademy.point_of_sales.dto.paginated.PaginatedResponseItemDto;
 import com.springbootacademy.point_of_sales.dto.request.ItemSaveRequestDto;
 import com.springbootacademy.point_of_sales.dto.request.ItemUpdateDto;
 import com.springbootacademy.point_of_sales.dto.response.ItemGetResponseDto;
 import com.springbootacademy.point_of_sales.entity.Item;
+import com.springbootacademy.point_of_sales.exception.NotFoundException;
 import com.springbootacademy.point_of_sales.repo.ItemRepo;
 import com.springbootacademy.point_of_sales.service.ItemService;
 import com.springbootacademy.point_of_sales.util.mappers.ItemMapper;
@@ -11,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -105,5 +109,33 @@ public class ItemServiceIMPL implements ItemService {
         }else {
             throw new RuntimeException("Item not exist");
         }
+    }
+
+    @Override
+    public List<ItemGetResponseDto> getItemByActiveStatus(Boolean activeStatus) {
+
+        List<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus);
+
+        if (items.size()>0){
+            List<ItemGetResponseDto> itemGetResponseDtos = itemMapper.entityListToDtoList(items);
+            return itemGetResponseDtos;
+        }else {
+            throw new NotFoundException("item is not found");
+        }
+    }
+
+    @Override
+    public PaginatedResponseItemDto getItemByActiveStatusWithPagination(Boolean activeStatus, int page, int size) {
+        Page<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus, PageRequest.of(page,size));
+        int count = itemRepo.countAllByActiveStateEquals(activeStatus);
+
+        if (items.getSize()<1){
+            throw new NotFoundException("No Data");
+        }
+        PaginatedResponseItemDto paginatedResponseItemDto = new PaginatedResponseItemDto(
+            itemMapper.pageToListDto(items),
+                count
+        );
+        return paginatedResponseItemDto;
     }
 }

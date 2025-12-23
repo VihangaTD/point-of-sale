@@ -3,6 +3,7 @@ package com.springbootacademy.point_of_sales.service.impl;
 import com.springbootacademy.point_of_sales.dto.CustomerDto;
 import com.springbootacademy.point_of_sales.dto.request.CustomerUpdateDto;
 import com.springbootacademy.point_of_sales.entity.Customer;
+import com.springbootacademy.point_of_sales.exception.NotFoundException;
 import com.springbootacademy.point_of_sales.repo.CustomerRepo;
 import com.springbootacademy.point_of_sales.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,22 +73,25 @@ public class CustomerServiceIMPL implements CustomerService {
     @Override
     public List<CustomerDto> getAllCustomers() {
         List<Customer> getAllCustomers = customerRepo.findAll();
-        List<CustomerDto> customerDtoList = new ArrayList<>();
-
-        for (Customer customer : getAllCustomers){
-            CustomerDto customerDto = new CustomerDto(
-                    customer.getCustomerId(),
-                    customer.getCustomerName(),
-                    customer.getCustomerAddress(),
-                    customer.getCustomerSalary(),
-                    customer.getContactNumber(),
-                    customer.getNic(),
-                    customer.isActive()
-            );
-            customerDtoList.add(customerDto);
+        if (getAllCustomers.size()>0){
+            List<CustomerDto> customerDtoList = new ArrayList<>();
+            for (Customer customer : getAllCustomers){
+                CustomerDto customerDto = new CustomerDto(
+                        customer.getCustomerId(),
+                        customer.getCustomerName(),
+                        customer.getCustomerAddress(),
+                        customer.getCustomerSalary(),
+                        customer.getContactNumber(),
+                        customer.getNic(),
+                        customer.isActive()
+                );
+                customerDtoList.add(customerDto);
+            }
+            return customerDtoList;
+        }else {
+            throw new NotFoundException("No Customer Found");
         }
 
-        return customerDtoList;
     }
 
     @Override

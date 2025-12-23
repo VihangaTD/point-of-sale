@@ -20,13 +20,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping
-    public String saveCustomer(@RequestBody CustomerDto customerDto){
+    public String saveCustomer(@RequestBody CustomerDto customerDto) {
         String message = customerService.saveCustomer(customerDto);
         return message;
     }
 
     @PutMapping
-    public String updateCustomer(@RequestBody CustomerUpdateDto customerUpdateDto){
+    public String updateCustomer(@RequestBody CustomerUpdateDto customerUpdateDto) {
         String message = customerService.updateCustomer(customerUpdateDto);
         return message;
     }
@@ -35,28 +35,28 @@ public class CustomerController {
             path = "get-by-id",
             params = "id"
     )
-    public CustomerDto getCustomerById(@RequestParam(value = "id") int customerId){
+    public CustomerDto getCustomerById(@RequestParam(value = "id") int customerId) {
         CustomerDto customerDto = customerService.getCustomerById(customerId);
         return customerDto;
     }
 
     @GetMapping
-    public ResponseEntity<StandardResponse> getAllCustomers(){
+    public ResponseEntity<StandardResponse> getAllCustomers() {
         List<CustomerDto> allCustomers = customerService.getAllCustomers();
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",allCustomers),
+                new StandardResponse(200, "Success", allCustomers),
                 HttpStatus.OK
         );
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCustomer(@PathVariable(value = "id") int customerId){
+    public String deleteCustomer(@PathVariable(value = "id") int customerId) {
         String message = customerService.deleteCustomer(customerId);
         return message;
     }
 
     @GetMapping("/{status}")
-    public List<CustomerDto> getAllCustomersByActiveState(@PathVariable(value = "status") boolean activeState){
+    public List<CustomerDto> getAllCustomersByActiveState(@PathVariable(value = "status") boolean activeState) {
         List<CustomerDto> allCustomers = customerService.getAllCustomersByActiveState(activeState);
         return allCustomers;
     }
