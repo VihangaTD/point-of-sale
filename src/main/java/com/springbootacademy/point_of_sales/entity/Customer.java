@@ -8,6 +8,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -39,5 +40,7 @@ public class Customer {
     @Column(name = "active_status", columnDefinition = "TINYINT default 0")
     private boolean active;
 
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders;
 
 }

@@ -20,17 +20,18 @@ public class CustomerServiceIMPL implements CustomerService {
 
     @Override
     public String saveCustomer(CustomerDto customerDto) {
-        Customer customer = new Customer(
-                customerDto.getCustomerId(),
-                customerDto.getCustomerName(),
-                customerDto.getCustomerAddress(),
-                customerDto.getCustomerSalary(),
-                customerDto.getContactNumber(),
-                customerDto.getNic(),
-                customerDto.isActive()
-        );
-        customerRepo.save(customer);
-        return customerDto.getCustomerName();
+//        Customer customer = new Customer(
+//                customerDto.getCustomerId(),
+//                customerDto.getCustomerName(),
+//                customerDto.getCustomerAddress(),
+//                customerDto.getCustomerSalary(),
+//                customerDto.getContactNumber(),
+//                customerDto.getNic(),
+//                customerDto.isActive()
+//        );
+//        customerRepo.save(customer);
+//        return customerDto.getCustomerName();
+        return null;
     }
 
     @Override
