@@ -1,6 +1,9 @@
 package com.springbootacademy.point_of_sales.service.impl;
 
+import com.springbootacademy.point_of_sales.dto.paginated.PaginatedResponseOrderDetailsDto;
+import com.springbootacademy.point_of_sales.dto.queryInterfaces.OrderDetailInterface;
 import com.springbootacademy.point_of_sales.dto.request.RequestOrderSaveDto;
+import com.springbootacademy.point_of_sales.dto.response.ResponseOrderDetailsDto;
 import com.springbootacademy.point_of_sales.entity.Order;
 import com.springbootacademy.point_of_sales.entity.OrderDetails;
 import com.springbootacademy.point_of_sales.repo.CustomerRepo;
@@ -11,9 +14,11 @@ import com.springbootacademy.point_of_sales.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,5 +69,27 @@ public class OrderServiceImpl implements OrderService {
             return "saved";
         }
         return null;
+    }
+
+    @Override
+    public PaginatedResponseOrderDetailsDto getAllOrderDetails(boolean status, int page, int size) {
+        List<OrderDetailInterface> orderDetailsDtos = orderRepo.getAllOrderDetails(status, PageRequest.of(page,size));
+
+        List<ResponseOrderDetailsDto> list = new ArrayList<>();
+        for (OrderDetailInterface o : orderDetailsDtos){
+            ResponseOrderDetailsDto r = new ResponseOrderDetailsDto(
+                    o.getCustomerName(),
+                    o.getCustomerAddress(),
+                    o.getContactNumber(),
+                    o.getDate(),
+                    o.getTotal()
+            );
+            list.add(r);
+        }
+        PaginatedResponseOrderDetailsDto paginatedResponseOrderDetailsDto = new PaginatedResponseOrderDetailsDto(
+                list,
+                orderRepo.countAllOrderDetails(status)
+        );
+        return paginatedResponseOrderDetailsDto;
     }
 }
